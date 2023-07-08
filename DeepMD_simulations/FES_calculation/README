@@ -1,0 +1,3 @@
+These are the input files used to calculate the free energy surface for diazanediide formation.
+
+CVs of  max_nn_fix11.max, max_nn_fix22.max, max_nn_fix33.max, max_nn_fix12.max, max_nn_fix13.max are used to form diazanediide anion in the first layer, the second layer, the third layer, between the first layer and the second layer, and between the second layer and the third layer, respectively.

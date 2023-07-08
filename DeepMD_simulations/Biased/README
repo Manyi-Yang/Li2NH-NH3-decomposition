@@ -1,0 +1,7 @@
+These are the input files to study the NH3 decomposition process in the (111) surface. 
+plumed_max_hn.dat is used to facilitate proton transfer events;
+plumed_max_nn.dat is used to obtain [HN-NH]2−,[HN-NH2]− species;
+plumed_max_h2h.dat is used to obtain H2;
+plumed_min_hn.dat is used to obtain H− species;
+plumed_min_h1n.dat and plumed_min_n1h.dat are used to obtain [N-N]4−,N2 and [N=NH]− species;
+

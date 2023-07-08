@@ -1,0 +1,55 @@
+variable p_id world ".0." ".1."  ".2." ".3."
+variable        NSTEPS1          equal 40000000
+variable        NSTEPS2          equal 12000000
+variable        THERMO_FREQ     equal 1000
+variable        DUMP_FREQ       equal 1000
+variable        TEMP            equal 750
+variable	SEED1      world  13764  7198 18020 5534
+variable	SEED2       world 27874  11014 49 18242 
+variable        TAU_T           equal 0.02
+
+units           metal
+boundary        p p p
+restart 2000000 lmp${p_id}restart
+atom_style      atomic
+neigh_modify    delay 10 every 1
+
+read_restart    restart${p_id}end
+mass	1       1.00784		
+mass	2	14.0067	
+mass    3       6.94100
+
+pair_style  deepmd ../deepmd.model.pb
+pair_coeff * *
+
+group atoms1 id 1:59:1
+group atoms2 id 60:392:1
+
+# TIMESTEP
+timestep	0.00025  #ps 
+thermo          ${THERMO_FREQ}
+thermo_style    custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo_modify 	flush yes
+
+# DUMP
+dump		myDump all xyz ${DUMP_FREQ} dump${p_id}xyz
+dump_modify	myDump append yes element H N Li
+
+######  NVT ######
+reset_timestep         0
+velocity        atoms2 create ${TEMP} ${SEED2} dist gaussian
+velocity        atoms1 set 0.0 0.0 0.0
+fix             dpgen_plm all plumed plumedfile plumed.dat  outfile output.plumed
+fix 3 atoms1 setforce 0.0 0.0 0.0
+fix             1 atoms2 nve
+fix             2 atoms2 temp/csvr ${TEMP} ${TEMP} ${TAU_T} ${SEED2}
+run             ${NSTEPS1}
+unfix dpgen_plm
+unfix 1
+unfix 2
+unfix 3
+
+# ---------- End --------------------- 
+write_restart  restart${p_id}end
+
+
